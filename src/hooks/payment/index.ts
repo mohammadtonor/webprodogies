@@ -22,10 +22,10 @@ export const useStripeElements = () => {
     return { StripePromise }
 }
 
-export const usePayment = (
+export const usePayments = (
     userId: string,
     affiliate: boolean,
-    stripeId: string,
+    stripeId?: string,
 ) => {
     const [isCategory, setIsCategory] = useState<string | undefined>(undefined)
     const stripe = useStripe()
@@ -36,8 +36,8 @@ export const usePayment = (
         reset,
         handleSubmit,
         formState: { errors },
-        watch,
         register,
+        watch,
     } = useForm<z.infer<typeof CreateGroupSchema>>({
         resolver: zodResolver(CreateGroupSchema),
         defaultValues: {
@@ -51,7 +51,6 @@ export const usePayment = (
                 setIsCategory(category)
             }
         })
-
         return () => category.unsubscribe()
     }, [watch])
 
@@ -62,12 +61,12 @@ export const usePayment = (
 
     const { mutateAsync: createGroup, isPending } = useMutation({
         mutationFn: async (data: z.infer<typeof CreateGroupSchema>) => {
-            if (!stripe || !elements || !Intent) {
+            if (!stripe || !elements) {
                 return null
             }
 
             const { error, paymentIntent } = await stripe.confirmCardPayment(
-                Intent.secret!,
+                Intent?.secret!,
                 {
                     payment_method: {
                         card: elements.getElement(
@@ -107,7 +106,6 @@ export const usePayment = (
     })
 
     const onCreateGroup = handleSubmit(async (values) => createGroup(values))
-
     return {
         onCreateGroup,
         isPending,

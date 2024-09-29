@@ -28,8 +28,6 @@ export const FormGenerator = ({
     type,
     lines,
 }: FormGeneratorProps) => {
-    console.log(errors.name)
-
     switch (inputType) {
         case "input":
             return (
