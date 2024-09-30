@@ -1,9 +1,11 @@
 import { onAuthenticatedUser } from "@/actions/auth"
+import { onGetChannelInfo } from "@/actions/channels"
+import { onGetGroupInfo } from "@/actions/groups"
 import { currentUser } from "@clerk/nextjs/server"
 import { QueryClient } from "@tanstack/react-query"
 
 type Props = {
-    params: { channelid: string }
+    params: { groupId: string; channelid: string }
 }
 
 const GroupChannelPage = async ({ params }: Props) => {
@@ -14,6 +16,11 @@ const GroupChannelPage = async ({ params }: Props) => {
     await client.prefetchQuery({
         queryKey: ["channel-info"],
         queryFn: () => onGetChannelInfo(params.channelid),
+    })
+
+    await client.prefetchQuery({
+        queryKey: ["about-group-info"],
+        queryFn: () => onGetGroupInfo(params.groupId),
     })
 
     return <div>GroupChannelPage</div>
