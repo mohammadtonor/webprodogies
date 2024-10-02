@@ -367,3 +367,79 @@ export const onUpDateGroupSettings = async (
     return { status: 400 }
   }
 }
+
+export const onGetExploreGroup = async (category: string, paginate: number) => {
+  try {
+    const groups = await client.group.findMany({
+      where: {
+        category,
+        NOT: {
+          description: null,
+          thumbnail: null,
+        },
+      },
+      take: 6,
+      skip: paginate,
+    })
+
+    if (groups && groups.length > 0) {
+      return { status: 200, groups }
+    }
+
+    return { status: 400, message: "No Group Found for this category" }
+  } catch (error) {
+    return { status: 400, message: "Oops! Something Went Wrong" }
+  }
+}
+
+export const onGetPaginatedPosts = async (
+  identifier: string,
+  paginate: number,
+) => {
+  try {
+    const user = await onAuthenticatedUser()
+    const posts = await client.post.findMany({
+      where: {
+        channelId: identifier,
+      },
+      skip: paginate,
+      take: 2,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        channel: {
+          select: {
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            firstname: true,
+            lastname: true,
+            image: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+        likes: {
+          where: {
+            userId: user.id!,
+          },
+          select: {
+            userId: true,
+            id: true,
+          },
+        },
+      },
+    })
+
+    if (posts && posts.length > 0) return { status: 200, posts }
+  } catch (error) {
+    return { status: 400 }
+  }
+}

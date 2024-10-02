@@ -1,7 +1,7 @@
 import GlassSheet from "@/components/global/glass-sheet"
 import Search from "@/components/global/search"
 import SideBar from "@/components/global/sidebar"
-import { UserWidget } from "@/components/global/user-widjet"
+import { UserWidget } from "@/components/global/user-widget"
 import { Button } from "@/components/ui/button"
 import { CheckBadge } from "@/icons"
 import { currentUser } from "@clerk/nextjs/server"
