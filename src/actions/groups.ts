@@ -386,9 +386,15 @@ export const onGetExploreGroup = async (category: string, paginate: number) => {
       return { status: 200, groups }
     }
 
-    return { status: 400, message: "No Group Found for this category" }
+    return {
+      status: 404,
+      message: "No groups found for this category",
+    }
   } catch (error) {
-    return { status: 400, message: "Oops! Something Went Wrong" }
+    return {
+      status: 400,
+      message: "Oops! something went wrong",
+    }
   }
 }
 
