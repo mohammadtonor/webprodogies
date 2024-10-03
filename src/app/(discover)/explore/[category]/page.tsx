@@ -12,7 +12,6 @@ const ExploreCategoryPage = async ({
   params: { category: string }
 }) => {
   const query = new QueryClient()
-  console.log("category", params.category)
 
   await query.prefetchQuery({
     queryKey: ["groups"],

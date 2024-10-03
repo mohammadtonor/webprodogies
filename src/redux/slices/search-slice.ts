@@ -23,7 +23,7 @@ type InitialStateProps = {
 
 const InitialState: InitialStateProps = {
   isSearching: false,
-  status: undefined,
+  status: 200,
   data: [],
   debounce: "",
 }

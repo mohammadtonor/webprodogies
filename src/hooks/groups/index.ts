@@ -301,10 +301,16 @@ export const useGroupList = (query: string) => {
     dispatch(onClearList({ data: [] }))
   }, [])
 
-  const { groups, status } = data as {
-    groups: GroupStateProps[]
-    status: number
-  }
+  const { groups, status } =
+    (data as {
+      groups: GroupStateProps[]
+      status: number
+    }) ||
+    //@ts-ignore
+    ({ groups: [], status: data?.status } as {
+      groups: GroupStateProps[]
+      status: number
+    })
 
   return { groups, status }
 }
