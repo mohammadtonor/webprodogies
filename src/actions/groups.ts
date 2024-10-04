@@ -449,3 +449,42 @@ export const onGetPaginatedPosts = async (
     return { status: 400 }
   }
 }
+
+export const onUpdateGrouppGallery = async (
+  groupid: string,
+  content: string,
+) => {
+  try {
+    const midiaLimit = await client.group.findUnique({
+      where: {
+        id: groupid,
+      },
+      select: {
+        gallery: true,
+      },
+    })
+
+    if (midiaLimit && midiaLimit?.gallery.length < 6) {
+      await client.group.update({
+        where: {
+          id: groupid,
+        },
+        data: {
+          gallery: {
+            push: content,
+            set: [],
+          },
+        },
+      })
+      revalidatePath(`/about/${groupid}`)
+      return { status: 200 }
+    }
+
+    return {
+      status: 400,
+      message: "Looks like your gallery has the maximum media allowed",
+    }
+  } catch (error) {
+    return { status: 400, message: "Looks like something went wrong!" }
+  }
+}
